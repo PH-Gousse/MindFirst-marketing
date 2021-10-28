@@ -26,7 +26,7 @@ export default function Home() {
           <Heading size="md" mb={20}>Meet with people you're already close to!</Heading>
           <Heading mb={10} size="xl">Access the Beta, drop your email.</Heading>
           <InputGroup>
-            <InputLeftAddon children="@"/>
+            <InputLeftAddon>@</InputLeftAddon>
             <Input mb={6} variant="outline" backgroundColor="white" type="email"/>
           </InputGroup>
           <Button w="50%" bg={"#635DB7"} _hover={{ bg: "#635DB7" }} _active={{bg: "#635DB7"}}>Receive an Invite</Button>
