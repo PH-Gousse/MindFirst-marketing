@@ -52,8 +52,15 @@ export default function Home() {
     // otherwise -> border red -> message = invalid email address
   }
 
+  const onOutsideClick = ({target}) => {
+    if (isInvalidInput && target !== inputRef.current) {
+      setFocusBorderColorInput('grey.100');
+      setIsInvalidInput(false);
+    }
+  }
+
   return (
-    <div className={styles.back}>
+    <div className={styles.back} onClick={(event) => onOutsideClick(event)}>
       <Head>
         <title>Mind First</title>
         <meta name="description" content="Mind First" />
