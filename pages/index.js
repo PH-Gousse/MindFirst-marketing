@@ -28,8 +28,7 @@ export default function Home() {
   const inputRef = useRef();
 
   const createUserAPI = async (user) => {
-    const users = await API.graphql(graphqlOperation(createUser, {input: user} ));
-    console.log('users = ', users);
+    await API.graphql(graphqlOperation(createUser, {input: user} ));
   }
 
   useEffect(() => {
@@ -55,8 +54,6 @@ export default function Home() {
       }).catch(err => {
         console.error('createUser:', err);
       });
-
-      console.log(`${inputValue} is valid`);
     } else {
       setFocusBorderColorInput('crimson');
       setIsInvalidInput(true);
