@@ -8,10 +8,49 @@ import {
   InputLeftAddon,
 } from "@chakra-ui/react";
 
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Home.module.css';
+import {useEffect, useRef, useState} from "react";
+import {validate} from 'email-validator';
+import {CheckIcon} from "@chakra-ui/icons";
 
 export default function Home() {
+  const [inputValue, setInputValue] = useState('');
+  const [focusBorderColorInput, setFocusBorderColorInput] = useState("grey.100");
+  const [isInvalidInput, setIsInvalidInput] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [buttonMessage, setButtonMessage] = useState('Receive my Invite');
 
+  const inputRef = useRef();
+
+  useEffect(() => {
+    inputRef.current.focus();
+  });
+
+  const handleChange = (event) => {
+    setFocusBorderColorInput('grey.100');
+    setIsInvalidInput(false);
+    if (event.target.value === '') {
+      setIsSubmitted(false);
+    }
+    setInputValue(event.target.value);
+  }
+
+  const onSubmit = () => {
+    const isValid = validate(inputValue);
+    if (isValid) {
+      setFocusBorderColorInput('grey.100');
+      setIsInvalidInput(false);
+      setIsSubmitted(true);
+      setButtonMessage('Invitation Sent!');
+      console.log(`${inputValue} is valid`);
+    } else {
+      setFocusBorderColorInput('crimson');
+      setIsInvalidInput(true);
+    }
+    // check the email address
+    // if correct -> send mutation
+    // otherwise -> border red -> message = invalid email address
+  }
 
   return (
     <div className={styles.back}>
@@ -27,9 +66,22 @@ export default function Home() {
           <Heading mb={10} size="xl">Access the Beta, drop your email.</Heading>
           <InputGroup>
             <InputLeftAddon>@</InputLeftAddon>
-            <Input mb={6} variant="outline" backgroundColor="white" type="email"/>
+            <Input mb={6} variant="outline" backgroundColor="white" type="email"
+                   focusBorderColor={focusBorderColorInput}
+                   ref={inputRef}
+                   value={inputValue}
+                   onChange={handleChange}
+                   isInvalid={isInvalidInput}
+            />
           </InputGroup>
-          <Button w="50%" bg={"#635DB7"} _hover={{ bg: "#635DB7" }} _active={{bg: "#635DB7"}}>Receive an Invite</Button>
+          <Button w="40%" bg={"#635DB7"}
+                  onClick={onSubmit}
+                  rightIcon={isSubmitted ? <CheckIcon/> : null}
+                  iconSpacing={5}
+                  isDisabled={isSubmitted}
+          >
+            {buttonMessage}
+          </Button>
         </Flex>
       </Flex>
     </div>
