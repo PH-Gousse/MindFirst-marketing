@@ -13,6 +13,11 @@ import {useEffect, useRef, useState} from "react";
 import {validate} from 'email-validator';
 import {CheckIcon} from "@chakra-ui/icons";
 
+import Amplify, { API, graphqlOperation } from 'aws-amplify';
+import awsconfig from '../src/aws-exports';
+import {createUser} from "../src/graphql/mutations";
+Amplify.configure(awsconfig);
+
 export default function Home() {
   const [inputValue, setInputValue] = useState('');
   const [focusBorderColorInput, setFocusBorderColorInput] = useState("grey.100");
@@ -22,6 +27,11 @@ export default function Home() {
 
   const inputRef = useRef();
 
+  const createUserAPI = async (user) => {
+    const users = await API.graphql(graphqlOperation(createUser, {input: user} ));
+    console.log('users = ', users);
+  }
+
   useEffect(() => {
     inputRef.current.focus();
   });
@@ -29,19 +39,23 @@ export default function Home() {
   const handleChange = (event) => {
     setFocusBorderColorInput('grey.100');
     setIsInvalidInput(false);
-    if (event.target.value === '') {
-      setIsSubmitted(false);
-    }
+    setIsSubmitted(false);
     setInputValue(event.target.value);
   }
 
   const onSubmit = () => {
     const isValid = validate(inputValue);
     if (isValid) {
-      setFocusBorderColorInput('grey.100');
-      setIsInvalidInput(false);
-      setIsSubmitted(true);
-      setButtonMessage('Invitation Sent!');
+      createUserAPI({email: inputValue}).then(r => {
+        setInputValue('');
+        setFocusBorderColorInput('grey.100');
+        setIsInvalidInput(false);
+        setIsSubmitted(true);
+        setButtonMessage('Invitation Sent!');
+      }).catch(err => {
+        console.error('createUser:', err);
+      });
+
       console.log(`${inputValue} is valid`);
     } else {
       setFocusBorderColorInput('crimson');
