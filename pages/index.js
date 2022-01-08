@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import {
-  Button,
+  Box,
+  Button, Center,
   Flex,
   Heading,
   Input,
@@ -13,9 +14,10 @@ import {useEffect, useRef, useState} from "react";
 import {validate} from 'email-validator';
 import {CheckIcon} from "@chakra-ui/icons";
 
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
+import Amplify, {API, graphqlOperation} from 'aws-amplify';
 import awsconfig from '../src/aws-exports';
 import {createUser} from "../src/graphql/mutations";
+
 Amplify.configure(awsconfig);
 
 export default function Home() {
@@ -28,7 +30,7 @@ export default function Home() {
   const inputRef = useRef();
 
   const createUserAPI = async (user) => {
-    await API.graphql(graphqlOperation(createUser, {input: user} ));
+    await API.graphql(graphqlOperation(createUser, {input: user}));
   }
 
   useEffect(() => {
@@ -74,14 +76,16 @@ export default function Home() {
     <div className={styles.back} onClick={(event) => onOutsideClick(event)}>
       <Head>
         <title>Mind First</title>
-        <meta name="description" content="Mind First" />
-        <link rel="icon" href="/favicon.ico" />
+        <meta name="description" content="Mind First"/>
+        <link rel="icon" href="/favicon.ico"/>
       </Head>
-      <Flex height="100vh" alignItems="center" justifyContent="center">
-        <Flex direction="column" p={12} rounded={6} alignItems="center">
-          <Heading size="3xl" mb={10}>Mind First</Heading>
-          <Heading size="md" mb={20}>Meet with people you're already close to!</Heading>
-          <Heading mb={10} size="xl">Access the Beta, drop your email.</Heading>
+      <Flex height="100vh" alignItems="center" justifyContent="space-around" direction={'column'}>
+        <Box >
+          <Heading size="3xl" mb={10} style={{textAlign: "center"}}>Mind First</Heading>
+          <Heading size="md" style={{textAlign: "center"}}>Meet with people you're already close to!</Heading>
+        </Box>
+        <Box >
+          <Heading mb={10} size="xl" style={{textAlign: "center"}}>Access the Beta, drop your email.</Heading>
           <InputGroup>
             <InputLeftAddon>@</InputLeftAddon>
             <Input mb={6} variant="outline" backgroundColor="white" type="email"
@@ -92,15 +96,18 @@ export default function Home() {
                    isInvalid={isInvalidInput}
             />
           </InputGroup>
-          <Button w="40%" bg={"#635DB7"}
-                  onClick={onSubmit}
-                  rightIcon={isSubmitted ? <CheckIcon/> : null}
-                  iconSpacing={5}
-                  isDisabled={isSubmitted}
-          >
-            {buttonMessage}
-          </Button>
-        </Flex>
+          <Center>
+            <Button w="40%" bg={"#f9c980"}
+                    onClick={onSubmit}
+                    rightIcon={isSubmitted ? <CheckIcon/> : null}
+                    iconSpacing={5}
+                    isDisabled={isSubmitted}
+            >
+              {buttonMessage}
+            </Button>
+
+          </Center>
+        </Box>
       </Flex>
     </div>
   )
